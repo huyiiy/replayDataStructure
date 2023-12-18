@@ -1,15 +1,25 @@
 #include <stdio.h>
+#include <string.h>
 #include "dynamicArray.h"
 
 
 #define BUFFER_SIZE 20
-#define DEFAULT_NUM 5
+#define DEFAULT_NUM 3
+
+
+typedef struct stuInfo
+{
+    int age;
+    char sex;
+}stuInfo;
+
+
 int main()
 {
     dynamicArray array;
     /* 初始化 */
     dynamicArrayInit(&array, BUFFER_SIZE);
-
+#if 0
     {
 
         /* 插入数据 */
@@ -63,6 +73,77 @@ int main()
         }
 
     }
+#elif 0
+    int buffer[DEFAULT_NUM] = {1, 2, 3};
+    for (int idx = 0; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayInsertData(&array, (void *)&buffer[idx]);
+    }
+
+    int size = 0;
+    dynamicArrayGetSize(&array, &size);
+    printf("size:%d\n", size);
+
+    int *val = NULL;
+    for (int idx = 0; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayGetAppointPosVal(&array, idx, (void *)&val);
+        printf("val:%d\n", *val);
+    }
+#elif 1
+    int idx = 0;
+    for (idx ; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayInsertData(&array, (void *)&idx);
+    }
+
+    int size = 0;
+    dynamicArrayGetSize(&array, &size);
+    printf("size:%d\n", size);
+
+    int *val = NULL;
+    for (int idx = 0; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayGetAppointPosVal(&array, idx, (void *)&val);
+        printf("val:%d\n", *val);
+    }
+#else
+    stuInfo stu1, stu2, stu3;
+    memset(&stu1, 0, sizeof(stu1));
+    memset(&stu2, 0, sizeof(stu2));
+    memset(&stu3, 0, sizeof(stu3));
+
+    stu1.age = 10;
+    stu1.sex = 'm';
+
+    stu2.age = 20;
+    stu2.sex = 'f';
+
+    stu3.age = 30;
+    stu3.sex = 'm';
+
+
+    stuInfo buffer[DEFAULT_NUM] = {stu1, stu2, stu3};
+
+
+    for (int idx = 0; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayInsertData(&array,(void *)&buffer[idx]);
+    }
+   
+
+    int size = 0;
+    dynamicArrayGetSize(&array, &size);
+    printf("size:%d\n", size);
+
+    stuInfo info = NULL;
+    memset(&info, 0, sizeof(info));
+    for (int idx = 0; idx < DEFAULT_NUM; idx++)
+    {
+        dynamicArrayGetAppointPosVal(&array, idx,(void *)&info);
+        printf("info.age:%d\tinfo.sex:%c\n", info->age, info->sex);
+    }
+#endif
     return 0;
 
 }
