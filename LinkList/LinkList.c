@@ -131,19 +131,54 @@ int LinkListAppointPosInsert(LinkList * pList, int pos, ELEMENTTYPE val)
 /* 链表头删 */
 int LinkListHeadDel(LinkList * pList)
 {
-    
+    return LinkListDelAppointPos(pList, 1);
+
 }
 
 /* 链表尾删 */
 int LinkListTaiDel(LinkList * pList)
 {
-    
+    return LinkListDelAppointPos(pList, pList->len);
 }
 
 /* 链表指定位置删 */
 int LinkListDelAppointPos(LinkList * pList, int pos)
 {
+    int ret = 0;
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+    /* */
+    if (pos < 0 || pos > pList->len)
+    {
+        return INVALID_ACCESS;
+    }
+#if 1
+    LinkNode * travelNode = pList->head;
+#else
+    LinkNode * travelNode = pList->head;
+#endif
+    while (--pos)
+    {
+        /* 向后移动位置 */
+        travelNode = travelNode->next;
+        //pos--;
+    }
+    // 跳出循环找到的是哪一个结点 
+    LinkNode * needDelNote = travelNode->next;
+    travelNode->next = needDelNote->next;
 
+    /* 释放内存 */
+    if (needDelNote != NULL)
+    {
+        free(needDelNote);
+        needDelNote = NULL;
+    }
+    /* 链表结点 */
+    (pList->len)--;
+    return ret;
+    
 }
 
 /* 链表删除指定的数据 */
