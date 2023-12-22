@@ -332,7 +332,7 @@ int DoubleLinkListDestroy(DoubleLinkList * pList)
 
 }
 
-/* 链表遍历接口 */
+/* 链表顺序遍历接口 */
 int DoubleLinkListForeach(DoubleLinkList * pList, int (*printFunc)(ELEMENTTYPE))
 {
     int ret = 0;
@@ -351,6 +351,7 @@ int DoubleLinkListForeach(DoubleLinkList * pList, int (*printFunc)(ELEMENTTYPE))
 #else
     /* travelNode 指向链表第一个元素 */
     DoubleLinkNode * travelNode = pList->head->next;
+   
       while (travelNode != NULL)
     {    
 #if 0
@@ -365,4 +366,20 @@ int DoubleLinkListForeach(DoubleLinkList * pList, int (*printFunc)(ELEMENTTYPE))
     return ret;    
 }
 
+/* 链表逆序遍历 */
+int DoubleLinkListReverseForeach(DoubleLinkList * pList, int (*printFunc)(ELEMENTTYPE))
+{
+    int ret = 0;
+    DoubleLinkNode * travelNode = pList->tail;
+    while (travelNode != pList->head)
+    {
+         /* 包装器 . 钩子 . 回调函数 */
+        printFunc(travelNode->data);
+        /* 移动前指针 */
+        travelNode = travelNode->prev;
+    } 
 
+    return ret;
+}
+ 
+    
