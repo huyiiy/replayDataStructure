@@ -502,7 +502,6 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
     {
         return ret;
     }
-
     /* 树的结点减一 */
     (pBstree->size)--;
     if ( binarySearchTreeNodeHasTwochildren(node))
@@ -512,20 +511,11 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
         node->data = preNode->data;
     }
     /* 程序执行到这里。 要删除的结点要么是度为一 要么是度为0*/
-#if 0
-    if (binarySearchTreeNodeHasOnechildren(node))
-    {
-        
-    }
-    else
-    {
-
-    }
-#else
 
     /* 假设node结点是度为一的。 它的child要么是左还是右 */
 
     BSTreeNode * child = node->left != NULL ? node->left : node->right;
+    BSTreeNode *delNode = NULL;
     if (child)
     {
         /*度为1*/
@@ -536,8 +526,14 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
         {
             /* 它是根结点 */
             pBstree->root = child;
-            free(node);
-            node = NULL;
+            delNode = node;
+            #if 0
+            if (node)
+            {   
+                free(node);
+                node = NULL;
+            }
+            #endif
         }
         else
         {
@@ -556,11 +552,14 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
         if(node->parent == NULL)
         {
             /*度为0*/
+            delNode = node;
+            #if 0 
             if (node)
             {
             free(node);
             node = NULL;
             }
+            #endif
         }
          else
         {
@@ -572,17 +571,24 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
             {
                 node->parent->right = NULL;
             }
-
+            #if 0
             if (node)
             {
                 free(node);
                 node = NULL;
             }
+            #endif
         }
         
     }
 
-#endif
+    if (delNode)
+    {
+        free(delNode);
+        delNode = NULL;
+    }
+
+    return ret;
 
 }
 
