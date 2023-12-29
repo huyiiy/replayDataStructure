@@ -312,8 +312,46 @@ static  AVLTreeNode *  AVLTreeNodeGetChildTaller(AVLTreeNode * node)
 
 }
 /* 左旋 */
-static int AVLTreeCurrentNodeRoateLeft(BalanceBinarySearchTree *pBstree, AVLTreeNode * node)
+static int AVLTreeCurrentNodeRoateLeft(BalanceBinarySearchTree *pBstree, AVLTreeNode * grand)
 {
+    int ret = 0;
+    /* */
+    AVLTreeNode *parent = grand->right;
+    AVLTreeNode *child = grand->left;
+
+    grand->right = child;       //1
+    parent->left = grand;       //2
+
+    /* p成为新的根结点 */
+    parent->parent = grand->parent; //3
+
+    if (AVLTreeCurrentNodeIsLeft(grand))
+    {
+        grand->parent->left = parent;   //4
+    } 
+    else if (AVLTreeCurrentNodeIsRight(grand))
+    {
+        grand->parent->right = parent;  //4
+    }
+    else
+    {
+        /* p成为新的根结点 */
+        pBstree->root = parent; //4
+    }
+
+    grand->parent = parent;     //5
+    if (child != NULL)
+    {
+        child->parent = grand;  //6
+    }
+
+    /* 更新高度 */
+    /* 先更新低的结点 */
+    AVLTreeNodeUpdateHeight(grand);
+    AVLTreeNodeUpdateHeight(parent);
+
+    return ret;
+
 
 }
 /* 右旋 */
