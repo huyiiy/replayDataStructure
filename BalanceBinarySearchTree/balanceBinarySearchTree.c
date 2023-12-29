@@ -56,6 +56,10 @@ static  AVLTreeNode * AVLTreeNodeGetChildTaller(AVLTreeNode * node);
 static int AVLTreeCurrentNodeIsLeft(AVLTreeNode * node);
 /* 当前结点是父结点的右子树 */
 static int AVLTreeCurrentNodeIsRight(AVLTreeNode * node);
+/* 左旋 */
+static int AVLTreeCurrentNodeRoateLeft(BalanceBinarySearchTree **pBstree, AVLTreeNode * node);
+/* 右旋 */
+static int AVLTreeCurrentNodeRoateRight(BalanceBinarySearchTree **pBstree, AVLTreeNode * grand);
 /* 二叉搜索树的初始化 */
 int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2), int (*printFunc)(ELEMENTTYPE val))
 {
@@ -307,7 +311,52 @@ static  AVLTreeNode *  AVLTreeNodeGetChildTaller(AVLTreeNode * node)
     }
 
 }
+/* 左旋 */
+static int AVLTreeCurrentNodeRoateLeft(BalanceBinarySearchTree *pBstree, AVLTreeNode * node)
+{
 
+}
+/* 右旋 */
+static int AVLTreeCurrentNodeRoateRight(BalanceBinarySearchTree *pBstree, AVLTreeNode * grand)
+{
+    int ret = 0;
+    /* */
+    AVLTreeNode *parent = grand->left;
+    AVLTreeNode *child = grand->right;
+
+    grand->left = child;        //1
+    parent->right = grand;      //2
+
+    /* p成为新的根结点 */
+    parent->parent = grand->parent; //4
+
+    if (AVLTreeCurrentNodeIsLeft(grand))
+    {
+        grand->parent->left = parent;   //4
+    } 
+    else if (AVLTreeCurrentNodeIsRight(grand))
+    {
+        grand->parent->right = parent;  //4
+    }
+    else
+    {
+        /* p成为新的根结点 */
+        pBstree->root = parent; //4
+    }
+
+    grand->parent = parent;     //5
+    if (child != NULL)
+    {
+        child->parent = grand;  //6
+    }
+
+    /* 更新高度 */
+    /* 先更新低的结点 */
+    AVLTreeNodeUpdateHeight(grand);
+    AVLTreeNodeUpdateHeight(parent);
+
+    return ret;
+}
 /* AVL树结点调整平衡 */
 /* node一定是最低的不平衡结点 */
 static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNode * node)
@@ -321,10 +370,12 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         if (AVLTreeCurrentNodeIsLeft(child))
         {
             /*LL*/
+            AVLTreeCurrentNodeRoateRight(pBstree, node);
         }
         else if (AVLTreeCurrentNodeIsRight(child))
         {
             /*LR*/
+            AVLTreeCurrentNodeRoate();
         }
     }
     else
@@ -333,10 +384,12 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         if (AVLTreeCurrentNodeIsLeft(child))
         {
             /*RL*/
+            AVLTreeCurrentNodeRoate();
         }
         else if (AVLTreeCurrentNodeIsRight(child))
         {
             /*RR*/
+            AVLTreeCurrentNodeRoateLeft(pBstree, node);
         }
     }
 }
